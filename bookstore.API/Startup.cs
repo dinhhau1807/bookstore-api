@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
+using bookstore.API;
+using bookstore.API.Extensions;
+using bookstore.API.Services;
+using bookstore.BussinessLogicLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,21 +15,30 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace bookstore
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCustomCors(Configuration);
+            services.AddOpenApiDocument(config => { config.Title = nameof(bookstore) + " API"; });
+            services.AddTokenAuthentication(Configuration);
+
+            services.AddSqlContext(Configuration);
+            services.AddDALServices().AddBussinessLogicServices();
+            services.AddServices();
             services.AddControllers();
         }
 
@@ -36,13 +50,17 @@ namespace bookstore
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseExceptionMiddleware();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
