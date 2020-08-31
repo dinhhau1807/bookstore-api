@@ -1,0 +1,25 @@
+08/31/2020 17:11:16 +07:00 Application Starting.
+08/31/2020 17:11:52 +07:00 | Application Starting.
+08/31/2020 17:14:29 +07:00 | Application Starting.
+08/31/2020 17:14:31 +07:00 | Application startup exception
+System.InvalidOperationException: Unable to resolve service for type 'Serilog.ILogger' while attempting to activate 'bookstore.API.Middlewares.ExpcetionMiddleware'.
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.<>c__DisplayClass4_0.<UseMiddleware>b__0(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+08/31/2020 17:14:31 +07:00 | The Application failed to start.
+System.InvalidOperationException: Unable to resolve service for type 'Serilog.ILogger' while attempting to activate 'bookstore.API.Middlewares.ExpcetionMiddleware'.
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.<>c__DisplayClass4_0.<UseMiddleware>b__0(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at bookstore.Program.Main(String[] args) in C:\Users\HMaster\Desktop\bookstore\bookstore.API\Program.cs:line 30
+08/31/2020 17:23:09 +07:00 | Application Starting.
+08/31/2020 17:23:11 +07:00 | Value cannot be null.
+08/31/2020 17:23:12 +07:00 | Value cannot be null.

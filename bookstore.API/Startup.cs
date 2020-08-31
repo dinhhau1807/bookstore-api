@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 namespace bookstore
 {
@@ -33,6 +34,7 @@ namespace bookstore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCustomCors(Configuration);
+            services.AddSingleton(Log.Logger);
             services.AddOpenApiDocument(config => { config.Title = nameof(bookstore) + " API"; });
             services.AddTokenAuthentication(Configuration);
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace bookstore.API.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IWebHostEnvironment _env;
+        private readonly ILogger _logger;
 
-        public ExpcetionMiddleware(RequestDelegate next, IWebHostEnvironment env)
+        public ExpcetionMiddleware(RequestDelegate next, IWebHostEnvironment env, ILogger logger)
         {
             _next = next;
             _env = env;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -31,7 +34,7 @@ namespace bookstore.API.Middlewares
             }
             catch (Exception ex)
             {
-                // log error
+                _logger.Error(ex.Message);
                 await HandleExpceptionAsync(httpContext, ex);
             }
         }
