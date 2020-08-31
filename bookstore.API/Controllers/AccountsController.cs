@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using bookstore.API.Services;
 using bookstore.BussinessLogicLayer.Services.Abstracts;
+using bookstore.Shared.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -23,16 +26,27 @@ namespace bookstore.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAccount()
         {
             var account = await _accountService.GetAccount(2);
             return Ok(account);
         }
 
-        [HttpPost]
-        public IActionResult Login()
+        [HttpGet("current")]
+        public IActionResult GetCurrentUser([FromServices] IHttpContextCurrentUser current)
         {
-            return Ok(_authenticateService.Authenticate("demo", "demo"));
+            var user = new[] { current.CurrentUserId.ToString(), current.CurrentUsername };
+            return Ok(new
+            {
+                user,
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Authenticate()
+        {
+            return Ok(_authenticateService.Authenticate("admin", ""));
         }
     }
 }

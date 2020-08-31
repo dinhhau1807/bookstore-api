@@ -14,5 +14,11 @@ namespace bookstore.API.Extensions
             app.UseMiddleware<ExpcetionMiddleware>();
             return app;
         }
+
+        public static IApplicationBuilder UseCustomMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<RequiredLoginMiddleware>();
+            return app;
+        }
     }
 }

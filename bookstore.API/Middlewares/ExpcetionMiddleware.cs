@@ -46,8 +46,8 @@ namespace bookstore.API.Middlewares
 
             object body = new
             {
-                Successful = false,
-                ErrorDesciption = "Something went wrong!",
+                Success = false,
+                ErrorMessage = "Something went wrong!",
                 ErrorCode = StatusCodes.Status500InternalServerError
             };
 
@@ -55,7 +55,7 @@ namespace bookstore.API.Middlewares
             {
                 body = new
                 {
-                    Successful = false,
+                    Success = false,
                     ErrorMessage = exception.Message,
                     ErrorStack = exception.StackTrace,
                     ErrorCode = StatusCodes.Status500InternalServerError

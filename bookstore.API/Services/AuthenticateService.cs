@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,21 +20,24 @@ namespace bookstore.API.Services
 
     public class AuthenticateService : IAuthenticateService
     {
+        private readonly ILogger _logger;
         private readonly IConfiguration _config;
         private readonly IAccountService _accountService;
 
-        public AuthenticateService(IConfiguration configuration, IAccountService accountService)
+        public AuthenticateService(ILogger logger, IConfiguration configuration, IAccountService accountService)
         {
             _config = configuration;
+            _logger = logger;
             _accountService = accountService;
         }
 
         public string Authenticate(string username, string password)
         {
             var identity = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, username)
-                });
+            {
+                new Claim("Id", "123"),
+                new Claim("Username", username)
+            });
 
             return GenerateSecurityToken(identity);
         }

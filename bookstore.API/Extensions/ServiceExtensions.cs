@@ -1,4 +1,5 @@
 ﻿using bookstore.API.Services;
+using bookstore.Shared.Services;
 using MicroOrm.Dapper.Repositories.Config;
 using MicroOrm.Dapper.Repositories.SqlGenerator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -97,6 +98,7 @@ namespace bookstore.API.Extensions
         /// <returns></returns>
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddTransient<IHttpContextCurrentUser, HttpContextCurrentUser>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             return services;
         }

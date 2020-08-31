@@ -24,7 +24,6 @@ namespace bookstore
     {
         public IConfiguration Configuration { get; }
 
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -40,6 +39,7 @@ namespace bookstore
 
             services.AddSqlContext(Configuration);
             services.AddDALServices().AddBussinessLogicServices();
+            services.AddHttpContextAccessor();
             services.AddServices();
             services.AddControllers();
         }
@@ -53,6 +53,7 @@ namespace bookstore
             }
 
             app.UseExceptionMiddleware();
+            app.UseCustomMiddleware();
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
