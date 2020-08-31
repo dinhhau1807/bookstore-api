@@ -1,6 +1,7 @@
 ﻿using bookstore.BussinessEnitites.Models;
 using bookstore.BussinessLogicLayer.Services.Abstracts;
 using bookstore.DataAccessLayer.Repositories.Abstracts;
+using bookstore.Shared.ApiResponse;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,7 @@ namespace bookstore.BussinessLogicLayer.Services.Concretes
             _accountRepository = accountRepository;
         }
 
-        public async Task<Account> GetAccount(int? id)
+        public async Task<ApiResponse<Account>> GetAccount(int? id)
         {
             Account user = null;
             if (id != null)
@@ -25,7 +26,7 @@ namespace bookstore.BussinessLogicLayer.Services.Concretes
                 user = await _accountRepository.GetOne(id.Value);
             }
 
-            return user;
+            return ApiResponse<Account>.Ok(user);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using bookstore.BussinessEnitites.Models;
+using bookstore.Shared.ApiResponse;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,6 @@ namespace bookstore.BussinessLogicLayer.Services.Abstracts
 {
     public interface IAccountService
     {
-        Task<Account> GetAccount(int? id);
+        Task<ApiResponse<Account>> GetAccount(int? id);
     }
 }

@@ -34,13 +34,11 @@ namespace bookstore.Controllers
         }
 
         [HttpGet("current")]
-        public IActionResult GetCurrentUser([FromServices] IHttpContextCurrentUser current)
+        public async Task<IActionResult> GetCurrentUser([FromServices] IHttpContextCurrentUser current)
         {
             var user = new[] { current.CurrentUserId.ToString(), current.CurrentUsername };
-            return Ok(new
-            {
-                user,
-            });
+            var account = await _accountService.GetAccount(2);
+            return Ok(new { user, account });
         }
 
         [HttpPost]

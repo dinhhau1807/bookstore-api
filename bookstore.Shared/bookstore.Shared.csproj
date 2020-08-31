@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApiResponse\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>

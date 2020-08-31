@@ -14,12 +14,12 @@ namespace bookstore
     {
         public static void Main(string[] args)
         {
-            //Read Configuration from appSettings
+            // Read configuration from appSettings
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            //Initialize Logger
+            // Initialize Logger
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
                 .CreateLogger();
