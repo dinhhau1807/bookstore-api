@@ -21,11 +21,11 @@ namespace bookstore.BussinessEnitites.Models
         [Column(nameof(HashPassword))]
         public string HashPassword { get; set; }
 
-        [Column(nameof(SaltPassword))]
-        public string SaltPassword { get; set; }
-
         [Column(nameof(Email))]
         public string Email { get; set; }
+
+        [Column(nameof(Name))]
+        public string Name { get; set; }
 
         [Column(nameof(Role))]
         public string Role { get; set; }

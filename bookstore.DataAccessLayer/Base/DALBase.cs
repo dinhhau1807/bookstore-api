@@ -21,28 +21,28 @@ namespace bookstore.DataAccessLayer.Base
             return result;
         }
 
-        public IAsyncEnumerable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        public Task<IEnumerable<T>> FindByCondition(Expression<Func<T, bool>> expression)
         {
             var results = FindAllAsync(expression);
-            return results as IAsyncEnumerable<T>;
+            return results;
         }
 
-        public IAsyncEnumerable<T> FindByConfitionPaging(Expression<Func<T, bool>> expression, uint pageNumber, uint pageSize)
+        public Task<IEnumerable<T>> FindByConfitionPaging(Expression<Func<T, bool>> expression, uint pageNumber, uint pageSize)
         {
             var limit = pageSize;
             var offset = (pageNumber - 1) * pageSize;
 
             var results = SetLimit(limit, offset).FindAllAsync(expression);
-            return results as IAsyncEnumerable<T>;
+            return results;
         }
 
-        public IAsyncEnumerable<T> GetListPaging(uint pageNumber, uint pageSize)
+        public Task<IEnumerable<T>> GetListPaging(uint pageNumber, uint pageSize)
         {
             var limit = pageSize;
             var offset = (pageNumber - 1) * pageSize;
 
             var results = SetLimit(limit, offset).FindAllAsync();
-            return results as IAsyncEnumerable<T>;
+            return results;
         }
 
         public Task<T> GetOne(K id)

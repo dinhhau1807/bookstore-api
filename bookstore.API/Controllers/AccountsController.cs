@@ -4,9 +4,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using bookstore.API.Services;
+using bookstore.BussinessEnitites.Enums;
 using bookstore.BussinessLogicLayer.Services.Abstracts;
+using bookstore.DataTransferObject.DTOs;
+using bookstore.Shared.ApiResponse;
 using bookstore.Shared.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -25,26 +29,32 @@ namespace bookstore.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetAccount()
+        [HttpGet("{id}")]
+        [Authorize(Roles = RoleNames.Admin)]
+        public async Task<IActionResult> GetAccount(int id)
         {
-            var account = await _accountService.GetAccount(2);
+            var account = await _authenticateService.GetAccount(id);
             return Ok(account);
         }
 
-        [HttpGet("current")]
-        public async Task<IActionResult> GetCurrentUser([FromServices] IHttpContextCurrentUser current)
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var user = new[] { current.CurrentUserId.ToString(), current.CurrentUsername };
-            var account = await _accountService.GetAccount(2);
-            return Ok(new { user, account });
+            var account = await _authenticateService.GetAccount(null);
+            return Ok(account);
+        }
+
+        [HttpGet("hash")]
+        public IActionResult GetHash(string pass)
+        {
+            return Ok(BCrypt.Net.BCrypt.HashPassword(pass));
         }
 
         [HttpPost]
-        public IActionResult Authenticate()
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            return Ok(_authenticateService.Authenticate("admin", ""));
+            return Ok(await _authenticateService.Login(model.Username, model.Password));
         }
     }
 }

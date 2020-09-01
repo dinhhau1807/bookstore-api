@@ -1,12 +1,15 @@
-﻿using bookstore.BussinessLogicLayer.Services.Abstracts;
+﻿using bookstore.BussinessEnitites.Models;
+using bookstore.BussinessLogicLayer.Services.Abstracts;
+using bookstore.DataTransferObject.DTOs;
+using bookstore.Shared.ApiResponse;
+using bookstore.Shared.Helpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +18,9 @@ namespace bookstore.API.Services
 {
     public interface IAuthenticateService
     {
-        string Authenticate(string username, string password);
+        Task<ApiResponse<AccountDTO>> Login(string username, string password);
+        Task<ApiResponse<AccountDTO>> Register(Account account);
+        Task<ApiResponse<AccountDTO>> GetAccount(int? id);
     }
 
     public class AuthenticateService : IAuthenticateService
@@ -31,19 +36,56 @@ namespace bookstore.API.Services
             _accountService = accountService;
         }
 
-        public string Authenticate(string username, string password)
+        public async Task<ApiResponse<AccountDTO>> GetAccount(int? id)
         {
+            AccountDTO account = await _accountService.GetAccount(id);
+            return ApiResponse<AccountDTO>.Ok(account);
+        }
+
+        public async Task<ApiResponse<AccountDTO>> Login(string username, string password)
+        {
+            var account = await _accountService.GetAccountByUsernameOrEmail(username);
+
+            if (account == null || !BCrypt.Net.BCrypt.Verify(password, account.HashPassword))
+            {
+                throw new AppException(StatusCodes.Status401Unauthorized, "Incorret username or password!");
+            }
+
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim("Id", "123"),
-                new Claim("Username", username)
+                new Claim("Id", account.Id.ToString()),
+                new Claim("Username", account.Username),
+                new Claim(ClaimTypes.Email, account.Email),
+                new Claim(ClaimTypes.GivenName, account.Name),
+                new Claim(ClaimTypes.Role, account.Role),
             });
 
-            return GenerateSecurityToken(identity);
+            var (tokenDescriptor, token) = GenerateSecurityToken(identity);
+
+            var accountDTO = new AccountDTO
+            {
+                Id = account.Id,
+                Username = account.Username,
+                Email = account.Email,
+                Name = account.Name,
+                Role = account.Role,
+                AuthInformation = new AuthInformation
+                {
+                    Token = token,
+                    Expires = tokenDescriptor.Expires,
+                }
+            };
+
+            return ApiResponse<AccountDTO>.Ok(accountDTO);
+        }
+
+        public Task<ApiResponse<AccountDTO>> Register(Account account)
+        {
+            throw new NotImplementedException();
         }
 
         #region Helpers
-        private string GenerateSecurityToken(ClaimsIdentity identity)
+        private (SecurityTokenDescriptor tokenDescriptor, string token) GenerateSecurityToken(ClaimsIdentity identity)
         {
             var secret = _config.GetSection("JwtConfig").GetSection("Secret").Value;
             var expDate = _config.GetSection("JwtConfig").GetSection("ExpirationInMinutes").Value;
@@ -59,7 +101,7 @@ namespace bookstore.API.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            return (tokenDescriptor, tokenHandler.WriteToken(token));
         }
         #endregion
     }
