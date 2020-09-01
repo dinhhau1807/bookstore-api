@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using bookstore.Shared.Helpers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -41,14 +42,17 @@ namespace bookstore.API.Middlewares
 
         private Task HandleExpceptionAsync(HttpContext httpContext, Exception exception)
         {
+            var isAppException = exception is AppException;
+            var appException = isAppException ? (AppException)exception : null;
+
             httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            httpContext.Response.StatusCode = isAppException ? appException.StatusCode : StatusCodes.Status500InternalServerError;
 
             object body = new
             {
                 Success = false,
-                ErrorMessage = "Something went wrong!",
-                ErrorCode = StatusCodes.Status500InternalServerError
+                ErrorMessage = isAppException ? appException.Message : "Something went wrong!",
+                ErrorCode = httpContext.Response.StatusCode
             };
 
             if (_env.IsDevelopment())
@@ -58,7 +62,8 @@ namespace bookstore.API.Middlewares
                     Success = false,
                     ErrorMessage = exception.Message,
                     ErrorStack = exception.StackTrace,
-                    ErrorCode = StatusCodes.Status500InternalServerError
+                    ErrorCode = httpContext.Response.StatusCode,
+                    IsOperation = isAppException
                 };
             }
 
