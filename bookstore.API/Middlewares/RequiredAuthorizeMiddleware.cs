@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace bookstore.API.Middlewares
 {
-    public class RequiredLoginMiddleware
+    public class RequiredAuthorizeMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public RequiredLoginMiddleware(RequestDelegate next)
+        public RequiredAuthorizeMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -21,14 +21,17 @@ namespace bookstore.API.Middlewares
         {
             await _next(httpContext);
 
-            if (httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized)
+            if (httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized ||
+                httpContext.Response.StatusCode == StatusCodes.Status403Forbidden)
             {
                 httpContext.Response.ContentType = "application/json";
 
                 object body = new
                 {
                     Success = false,
-                    ErrorMessage = "You're not logged in! Please log in to get access!",
+                    ErrorMessage = httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized ?
+                                                    "You're not logged in! Please log in to get access!" :
+                                                    "You're not allowed to perform this action!",
                     ErrorCode = httpContext.Response.StatusCode
                 };
 
