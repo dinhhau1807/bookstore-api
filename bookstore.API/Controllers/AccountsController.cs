@@ -29,6 +29,14 @@ namespace bookstore.Controllers
             _accountService = accountService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = RoleNames.Admin)]
+        public async Task<IActionResult> GetAccounts(uint pageNumber = 1, uint pageSize = 30)
+        {
+            var accounts = await _accountService.GetAccounts(pageNumber, pageSize);
+            return Ok(accounts);
+        }
+
         [HttpGet("{id}")]
         [Authorize(Roles = RoleNames.Admin)]
         public async Task<IActionResult> GetAccount(int id)
@@ -45,16 +53,29 @@ namespace bookstore.Controllers
             return Ok(account);
         }
 
+        /// <summary>
+        /// Just for testing
+        /// </summary>
+        /// <param name="pass"></param>
+        /// <returns></returns>
         [HttpGet("hash")]
         public IActionResult GetHash(string pass)
         {
             return Ok(BCrypt.Net.BCrypt.HashPassword(pass));
         }
 
-        [HttpPost]
+        [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             return Ok(await _authenticateService.Login(model.Username, model.Password));
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterAccountDTO model)
+        {
+            return Ok(await _authenticateService.Register(model));
         }
     }
 }

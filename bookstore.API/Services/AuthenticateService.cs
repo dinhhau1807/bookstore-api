@@ -20,7 +20,7 @@ namespace bookstore.API.Services
     public interface IAuthenticateService
     {
         Task<ApiResponse<AccountDTO>> Login(string username, string password);
-        Task<ApiResponse<AccountDTO>> Register(Account account);
+        Task<ApiResponse<AccountDTO>> Register(RegisterAccountDTO registerAccountDTO);
         Task<ApiResponse<AccountDTO>> GetAccount(int? id);
     }
 
@@ -42,6 +42,11 @@ namespace bookstore.API.Services
         public async Task<ApiResponse<AccountDTO>> GetAccount(int? id)
         {
             AccountDTO account = await _accountService.GetAccount(id);
+            if (account == null)
+            {
+                throw new AppException(StatusCodes.Status404NotFound, "Account not found.");
+            }
+
             return ApiResponse<AccountDTO>.Ok(account);
         }
 
@@ -76,9 +81,12 @@ namespace bookstore.API.Services
             return ApiResponse<AccountDTO>.Ok(accountDTO);
         }
 
-        public Task<ApiResponse<AccountDTO>> Register(Account account)
+        public async Task<ApiResponse<AccountDTO>> Register(RegisterAccountDTO registerAccountDTO)
         {
-            throw new NotImplementedException();
+            var account = await _accountService.CreateAccount(registerAccountDTO);
+
+            _logger.Information($"Created user {account.Username} on {TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "SE Asia Standard Time")}.");
+            return await Login(account.Username, registerAccountDTO.Password);
         }
 
         #region Helpers

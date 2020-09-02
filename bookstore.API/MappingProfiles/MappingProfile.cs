@@ -13,6 +13,7 @@ namespace bookstore.API.MappingProfiles
         public MappingProfile()
         {
             CreateMap<Account, AccountDTO>().ReverseMap();
+            CreateMap<Account, RegisterAccountDTO>().ReverseMap();
         }
     }
 }

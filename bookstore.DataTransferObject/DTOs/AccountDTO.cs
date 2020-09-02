@@ -14,6 +14,21 @@ namespace bookstore.DataTransferObject.DTOs
         public string Password { get; set; }
     }
 
+    public class RegisterAccountDTO
+    {
+        public string Username { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+    }
+
     public class AuthInformation
     {
         public string Token { get; set; }

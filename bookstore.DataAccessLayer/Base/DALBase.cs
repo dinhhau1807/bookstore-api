@@ -2,10 +2,12 @@
 using MicroOrm.Dapper.Repositories.SqlGenerator;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static MicroOrm.Dapper.Repositories.SqlGenerator.Filters.OrderInfo;
 
 namespace bookstore.DataAccessLayer.Base
 {
@@ -27,7 +29,7 @@ namespace bookstore.DataAccessLayer.Base
             return results;
         }
 
-        public Task<IEnumerable<T>> FindByConfitionPaging(Expression<Func<T, bool>> expression, uint pageNumber, uint pageSize)
+        public Task<IEnumerable<T>> FindByConfitionPaging(uint pageNumber, uint pageSize, Expression<Func<T, object>> orderExpression, Expression<Func<T, bool>> expression)
         {
             var limit = pageSize;
             var offset = (pageNumber - 1) * pageSize;
@@ -36,13 +38,23 @@ namespace bookstore.DataAccessLayer.Base
             return results;
         }
 
-        public Task<IEnumerable<T>> GetListPaging(uint pageNumber, uint pageSize)
+        public Task<IEnumerable<T>> GetListPaging(uint pageNumber, uint pageSize, Expression<Func<T, object>> orderExpression)
         {
-            var limit = pageSize;
             var offset = (pageNumber - 1) * pageSize;
+            var limit = pageSize;
 
-            var results = SetLimit(limit, offset).FindAllAsync();
+            var results = SetOrderBy<T>(SortDirection.ASC, orderExpression).SetLimit(limit, offset).FindAllAsync();
             return results;
+        }
+
+        public Task<int> CountAll()
+        {
+            return CountAsync();
+        }
+
+        public Task<int> CountByCondition(Expression<Func<T, bool>> expression)
+        {
+            return CountAsync(expression);
         }
 
         public Task<T> GetOne(K id)

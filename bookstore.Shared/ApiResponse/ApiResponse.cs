@@ -10,6 +10,7 @@ namespace bookstore.Shared.ApiResponse
         public bool Success { get; set; }
         public int StatusCode { get; set; }
         public object Data { get; set; }
+        public object ExtraData { get; set; }
 
         public ApiResponse(T data)
         {

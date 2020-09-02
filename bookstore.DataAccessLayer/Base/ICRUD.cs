@@ -8,11 +8,14 @@ namespace bookstore.DataAccessLayer.Base
 {
     public interface ICRUD<T, K> where T : class, new()
     {
-        Task<IEnumerable<T>> GetListPaging(uint pageNumber, uint pageSize);
+        Task<IEnumerable<T>> GetListPaging(uint pageNumber, uint pageSize, Expression<Func<T, object>> orderExpression);
         Task<T> GetOne(K id);
 
         Task<IEnumerable<T>> FindByCondition(Expression<Func<T, bool>> expression);
-        Task<IEnumerable<T>> FindByConfitionPaging(Expression<Func<T, bool>> expression, uint pageNumber, uint pageSize);
+        Task<IEnumerable<T>> FindByConfitionPaging(uint pageNumber, uint pageSize, Expression<Func<T, object>> orderExpression, Expression<Func<T, bool>> expression);
+
+        Task<int> CountAll();
+        Task<int> CountByCondition(Expression<Func<T, bool>> expression);
 
         Task<bool> Insert(T value);
         Task Update(T value);

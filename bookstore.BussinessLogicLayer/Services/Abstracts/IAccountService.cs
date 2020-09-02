@@ -10,7 +10,9 @@ namespace bookstore.BussinessLogicLayer.Services.Abstracts
 {
     public interface IAccountService
     {
+        Task<ApiResponse<IEnumerable<AccountDTO>>> GetAccounts(uint pageNumber, uint pageSize);
         Task<AccountDTO> GetAccount(int? id);
         Task<Account> GetAccountByUsernameOrEmail(string usernameOrEmail);
+        Task<Account> CreateAccount(RegisterAccountDTO registerAccountDTO);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using bookstore.Shared.Helpers;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -21,26 +22,11 @@ namespace bookstore.API.Middlewares
         {
             await _next(httpContext);
 
-            if (httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized ||
-                httpContext.Response.StatusCode == StatusCodes.Status403Forbidden)
-            {
-                httpContext.Response.ContentType = "application/json";
+            if (httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized)
+                throw new AppException(httpContext.Response.StatusCode, "You're not logged in! Please log in to get access!");
 
-                object body = new
-                {
-                    Success = false,
-                    ErrorMessage = httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized ?
-                                                    "You're not logged in! Please log in to get access!" :
-                                                    "You're not allowed to perform this action!",
-                    ErrorCode = httpContext.Response.StatusCode
-                };
-
-
-                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(body, new JsonSerializerSettings()
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                }));
-            }
+            if (httpContext.Response.StatusCode == StatusCodes.Status403Forbidden)
+                throw new AppException(httpContext.Response.StatusCode, "You're not allowed to perform this action!");
         }
     }
 }
