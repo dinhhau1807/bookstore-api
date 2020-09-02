@@ -26,7 +26,7 @@ namespace bookstore
 
             try
             {
-                Log.Information("Application Starting.");
+                Log.Information("Application starting.");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)

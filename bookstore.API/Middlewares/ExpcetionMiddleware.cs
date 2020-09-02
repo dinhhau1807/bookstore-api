@@ -35,7 +35,7 @@ namespace bookstore.API.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                if (!(ex is AppException)) _logger.Error(ex.Message);
                 await HandleExpceptionAsync(httpContext, ex);
             }
         }

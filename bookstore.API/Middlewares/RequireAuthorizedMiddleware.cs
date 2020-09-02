@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace bookstore.API.Middlewares
 {
-    public class RequiredAuthorizeMiddleware
+    public class RequireAuthorizedMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public RequiredAuthorizeMiddleware(RequestDelegate next)
+        public RequireAuthorizedMiddleware(RequestDelegate next)
         {
             _next = next;
         }

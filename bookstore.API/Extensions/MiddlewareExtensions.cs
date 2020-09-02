@@ -17,7 +17,7 @@ namespace bookstore.API.Extensions
 
         public static IApplicationBuilder UseCustomMiddleware(this IApplicationBuilder app)
         {
-            app.UseMiddleware<RequiredAuthorizeMiddleware>();
+            app.UseMiddleware<RequireAuthorizedMiddleware>();
             return app;
         }
     }

@@ -1,4 +1,5 @@
-﻿using bookstore.BussinessEnitites.Models;
+﻿using AutoMapper;
+using bookstore.BussinessEnitites.Models;
 using bookstore.BussinessLogicLayer.Services.Abstracts;
 using bookstore.DataTransferObject.DTOs;
 using bookstore.Shared.ApiResponse;
@@ -26,13 +27,15 @@ namespace bookstore.API.Services
     public class AuthenticateService : IAuthenticateService
     {
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         private readonly IAccountService _accountService;
 
-        public AuthenticateService(ILogger logger, IConfiguration configuration, IAccountService accountService)
+        public AuthenticateService(ILogger logger, IMapper mapper, IConfiguration configuration, IAccountService accountService)
         {
-            _config = configuration;
             _logger = logger;
+            _mapper = mapper;
+            _config = configuration;
             _accountService = accountService;
         }
 
@@ -62,20 +65,14 @@ namespace bookstore.API.Services
 
             var (tokenDescriptor, token) = GenerateSecurityToken(identity);
 
-            var accountDTO = new AccountDTO
+            var accountDTO = _mapper.Map<Account, AccountDTO>(account);
+            accountDTO.AuthInformation = new AuthInformation
             {
-                Id = account.Id,
-                Username = account.Username,
-                Email = account.Email,
-                Name = account.Name,
-                Role = account.Role,
-                AuthInformation = new AuthInformation
-                {
-                    Token = token,
-                    Expires = tokenDescriptor.Expires,
-                }
+                Token = token,
+                Expires = tokenDescriptor.Expires,
             };
 
+            _logger.Information($"User {account.Username} logged on {TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "SE Asia Standard Time")}.");
             return ApiResponse<AccountDTO>.Ok(accountDTO);
         }
 

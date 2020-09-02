@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using AutoMapper;
 using bookstore.API;
 using bookstore.API.Extensions;
 using bookstore.API.Services;
@@ -41,6 +42,7 @@ namespace bookstore
             services.AddDALServices().AddBussinessLogicServices();
             services.AddHttpContextAccessor();
             services.AddServices();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 

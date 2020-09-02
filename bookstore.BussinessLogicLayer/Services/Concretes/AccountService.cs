@@ -1,4 +1,5 @@
-﻿using bookstore.BussinessEnitites.Models;
+﻿using AutoMapper;
+using bookstore.BussinessEnitites.Models;
 using bookstore.BussinessLogicLayer.Services.Abstracts;
 using bookstore.DataAccessLayer.Repositories.Abstracts;
 using bookstore.DataTransferObject.DTOs;
@@ -16,11 +17,13 @@ namespace bookstore.BussinessLogicLayer.Services.Concretes
 {
     public class AccountService : IAccountService
     {
+        private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
         private readonly IHttpContextCurrentUser _httpContextCurrentUser;
 
-        public AccountService(IAccountRepository accountRepository, IHttpContextCurrentUser httpContextCurrentUser)
+        public AccountService(IMapper mapper, IAccountRepository accountRepository, IHttpContextCurrentUser httpContextCurrentUser)
         {
+            _mapper = mapper;
             _accountRepository = accountRepository;
             _httpContextCurrentUser = httpContextCurrentUser;
         }
@@ -38,15 +41,7 @@ namespace bookstore.BussinessLogicLayer.Services.Concretes
                 account = await _accountRepository.GetOne(_httpContextCurrentUser.CurrentUserId.Value);
             }
 
-            var accountDTO = new AccountDTO
-            {
-                Id = account.Id,
-                Username = account.Username,
-                Email = account.Email,
-                Name = account.Name,
-                Role = account.Role,
-            };
-
+            var accountDTO = _mapper.Map<Account, AccountDTO>(account);
             return accountDTO;
         }
 
