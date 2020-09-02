@@ -34,7 +34,7 @@ namespace bookstore.DataAccessLayer.Base
             var limit = pageSize;
             var offset = (pageNumber - 1) * pageSize;
 
-            var results = SetLimit(limit, offset).FindAllAsync(expression);
+            var results = SetOrderBy<T>(SortDirection.ASC, orderExpression).SetLimit(limit, offset).FindAllAsync(expression);
             return results;
         }
 
