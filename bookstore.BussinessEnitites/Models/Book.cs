@@ -5,31 +5,35 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 using System.Text;
 
 namespace bookstore.BussinessEnitites.Models
 {
-    [Table("Users")]
-    public class Account
+    [Table("Books")]
+    public class Book
     {
         [Key, Identity]
         [Column(nameof(Id))]
         public int Id { get; set; }
 
-        [Column(nameof(Username))]
-        public string Username { get; set; }
+        [Column(nameof(BookName))]
+        public string BookName { get; set; }
 
-        [Column(nameof(HashPassword))]
-        public string HashPassword { get; set; }
+        [Column(nameof(Author))]
+        public string Author { get; set; }
 
-        [Column(nameof(Email))]
-        public string Email { get; set; }
+        [Column(nameof(Publisher))]
+        public string Publisher { get; set; }
 
-        [Column(nameof(Name))]
-        public string Name { get; set; }
+        [Column(nameof(PublishedDate))]
+        public DateTime PublishedDate { get; set; }
 
-        [Column(nameof(Role))]
-        public string Role { get; set; }
+        [Column(nameof(Quantity))]
+        public int Quantity { get; set; }
+
+        [Column(nameof(UnitPrice))]
+        public decimal UnitPrice { get; set; }
 
         [Status, Deleted]
         [Column(nameof(IsDeleted))]
@@ -44,7 +48,7 @@ namespace bookstore.BussinessEnitites.Models
 
 
         // Join Table
-        [LeftJoin("Orders", nameof(Id), nameof(Order.UserId))]
+        [LeftJoin("Orders", nameof(Id), nameof(Order.BookId))]
         public List<Order> Orders { get; set; }
     }
 }

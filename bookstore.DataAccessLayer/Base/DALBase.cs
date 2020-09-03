@@ -40,8 +40,8 @@ namespace bookstore.DataAccessLayer.Base
 
         public Task<IEnumerable<T>> GetListPaging(uint pageNumber, uint pageSize, Expression<Func<T, object>> orderExpression)
         {
-            var offset = (pageNumber - 1) * pageSize;
             var limit = pageSize;
+            var offset = (pageNumber - 1) * pageSize;
 
             var results = SetOrderBy<T>(SortDirection.ASC, orderExpression).SetLimit(limit, offset).FindAllAsync();
             return results;

@@ -18,6 +18,7 @@ namespace bookstore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountsController : ControllerBase
     {
         private readonly IAuthenticateService _authenticateService;
@@ -46,7 +47,6 @@ namespace bookstore.Controllers
         }
 
         [HttpGet("me")]
-        [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
             var account = await _authenticateService.GetAccount(null);
@@ -71,8 +71,8 @@ namespace bookstore.Controllers
             return Ok(await _authenticateService.Login(model.Username, model.Password));
         }
 
-        [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterAccountDTO model)
         {
             return Ok(await _authenticateService.Register(model));
