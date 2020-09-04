@@ -2,7 +2,7 @@
 >## Introduction
 - This is simple API for register user, manage books, order books.
 
->## Technology & 
+>## Technology & Design
 - **Core:** ASP.NET Core 3.1
 - **Architecture:** MVC + 3-Layer
 - **Design pattern:** Repository Pattern
