@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace bookstore.BussinessEnitites.Models
 {
@@ -35,6 +36,7 @@ namespace bookstore.BussinessEnitites.Models
         [Column(nameof(UnitPrice))]
         public decimal UnitPrice { get; set; }
 
+        [JsonIgnore]
         [Status, Deleted]
         [Column(nameof(IsDeleted))]
         public bool IsDeleted { get; set; }

@@ -14,12 +14,14 @@ namespace bookstore.BussinessLogicLayer
         public static IServiceCollection AddDALServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
             return services;
         }
 
         public static IServiceCollection AddBussinessLogicServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IBookService, BookService>();
             return services;
         }
     }

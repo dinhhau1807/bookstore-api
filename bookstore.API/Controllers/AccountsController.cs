@@ -59,6 +59,7 @@ namespace bookstore.Controllers
         /// <param name="pass"></param>
         /// <returns></returns>
         [HttpGet("hash")]
+        [AllowAnonymous]
         public IActionResult GetHash(string pass)
         {
             return Ok(BCrypt.Net.BCrypt.HashPassword(pass));

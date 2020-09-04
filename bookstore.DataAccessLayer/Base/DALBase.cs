@@ -17,7 +17,7 @@ namespace bookstore.DataAccessLayer.Base
         {
         }
 
-        public Task Delete(T value)
+        public Task<bool> Delete(T value)
         {
             var result = DeleteAsync(value);
             return result;
@@ -63,7 +63,7 @@ namespace bookstore.DataAccessLayer.Base
             return result;
         }
 
-        public Task Update(T value)
+        public Task<bool> Update(T value)
         {
             var result = UpdateAsync(value);
             return result;

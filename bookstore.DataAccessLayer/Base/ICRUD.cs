@@ -18,7 +18,7 @@ namespace bookstore.DataAccessLayer.Base
         Task<int> CountByCondition(Expression<Func<T, bool>> expression);
 
         Task<bool> Insert(T value);
-        Task Update(T value);
-        Task Delete(T value);
+        Task<bool> Update(T value);
+        Task<bool> Delete(T value);
     }
 }
