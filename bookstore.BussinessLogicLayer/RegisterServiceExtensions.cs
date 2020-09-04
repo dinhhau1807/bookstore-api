@@ -15,6 +15,7 @@ namespace bookstore.BussinessLogicLayer
         {
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             return services;
         }
 
@@ -22,6 +23,7 @@ namespace bookstore.BussinessLogicLayer
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IOrderService, OrderService>();
             return services;
         }
     }

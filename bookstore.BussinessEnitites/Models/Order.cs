@@ -12,15 +12,13 @@ namespace bookstore.BussinessEnitites.Models
     [Table("Orders")]
     public class Order
     {
-        [Key, Identity]
-        [Column(nameof(Id))]
-        public int Id { get; set; }
-
         [Key]
+        [Column(nameof(Id))]
+        public string Id { get; set; }
+
         [Column(nameof(UserId))]
         public int UserId { get; set; }
 
-        [Key]
         [Column(nameof(BookId))]
         public int BookId { get; set; }
 
